@@ -1,0 +1,81 @@
+package Programmes;
+
+public class Integrate {    
+
+     static interface Function {
+         double compute(double x);
+     }
+
+     static class SampleFunction implements Function {
+         final int n;
+         SampleFunction(int n) { this.n = n; }
+
+         public double compute(double x)  {
+             double power = x;
+             double xsq = x * x;
+             double val = power;
+             double di = 1.0;
+             for (int i = n - 1; i > 0; --i) {
+                 di += 2.0;
+                 power *= xsq;
+                 val += di * power;
+             }
+             return val;
+         }
+     }
+
+     static class Integrator {
+         final Function f;      // The function to integrate
+         final double errorTolerance;
+
+         Integrator(Function f, double errorTolerance) {
+             this.f = f;
+             this.errorTolerance = errorTolerance;
+         }
+
+         double integral(double lowerBound, double upperBound) {
+             double f_lower = f.compute(lowerBound);
+             double f_upper = f.compute(upperBound);
+             double initialArea = 0.5 * (upperBound-lowerBound) * (f_upper + f_lower);
+             Quad q = new Quad(f, errorTolerance);
+             return q.run(lowerBound, upperBound, f_lower, f_upper, initialArea);
+         }
+
+         static class Quad {
+             final Function f;
+             final double errorTolerance;
+
+             Quad(Function f, double errorTolerance) {
+                 this.f = f;
+                 this.errorTolerance = errorTolerance;
+             }
+
+             public double run(double left, double right, double f_left, double f_right, double area) {
+                 double center = 0.5 * (left + right);
+                 double f_center = f.compute(center);
+
+                 double leftArea  = 0.5 * (center - left)  * (f_left + f_center);
+                 double rightArea = 0.5 * (right - center) * (f_center + f_right);
+                 double sum = leftArea + rightArea;
+
+                 double diff = sum - area;
+                 if (diff < 0) diff = -diff;
+
+                 if (diff >= errorTolerance) {
+                     double q1;
+                     double q2;
+                     //taskq nthreads=2 MaxDepth=4
+                     {
+                        //task
+                         q1 = run(left, center, f_left, f_center, leftArea);
+                        //task
+                        q2 = run(center, right,  f_center, f_right, rightArea);
+                     }
+                     sum = q1 + q2;
+                 }
+
+                 return sum;
+             }
+         }
+     }
+ }
