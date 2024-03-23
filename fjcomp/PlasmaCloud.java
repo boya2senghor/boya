@@ -1,5 +1,5 @@
 /*************************************************************************
-¨   FJCOMP Previous version 0.0  - Date: Fevrier 2013*
+ï¿½   FJCOMP Previous version 0.0  - Date: Fevrier 2013*
 *   FJCOMP Version 1.0  - updated : Avril 2023     *
 *   Ce code est genere et mis en forme par le compilateur FJComp         *
 * Auteur du Compilateur: Abdourahmane Senghor  -- boya2senghor@yahoo.fr  *
@@ -61,7 +61,7 @@ public class PlasmaCloud {
       protected void compute ( ) {
          int MAX_DEPTH ;
          String maxdepthStr = System . getProperty ( "fjcomp.maxdepth" ) ;
-         MAX_DEPTH = 2 ;
+         MAX_DEPTH = 4 ;
          try {
             MAX_DEPTH = Integer . parseInt ( maxdepthStr ) ;
             if ( MAX_DEPTH == 0 ) {
